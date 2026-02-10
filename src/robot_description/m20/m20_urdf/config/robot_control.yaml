@@ -1,0 +1,74 @@
+m20_gazebo:
+    # Publish all joint states -----------------------------------
+    joint_state_controller:
+        type: joint_state_controller/JointStateController
+        publish_rate: 1000
+
+    # fl Controllers ---------------------------------------
+    fl_hipx_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: fl_hipx_joint
+
+    fl_hipy_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: fl_hipy_joint
+
+    fl_knee_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: fl_knee_joint
+
+    fl_wheel_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: fl_wheel_joint
+
+    # fr Controllers ---------------------------------------
+    fr_hipx_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: fr_hipx_joint
+
+    fr_hipy_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: fr_hipy_joint
+
+    fr_knee_controller: 
+        type: robot_joint_controller/RobotJointController
+        joint: fr_knee_joint
+
+    fr_wheel_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: fr_wheel_joint
+
+    # hl Controllers ---------------------------------------
+    hl_hipx_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: hl_hipx_joint
+
+    hl_hipy_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: hl_hipy_joint
+
+    hl_knee_controller: 
+        type: robot_joint_controller/RobotJointController
+        joint: hl_knee_joint
+
+    hl_wheel_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: hl_wheel_joint
+
+    # hr Controllers ---------------------------------------
+    hr_hipx_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: hr_hipx_joint
+
+    hr_hipy_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: hr_hipy_joint
+
+    hr_knee_controller: 
+        type: robot_joint_controller/RobotJointController
+        joint: hr_knee_joint
+
+    hr_wheel_controller:
+        type: robot_joint_controller/RobotJointController
+        joint: hr_wheel_joint
+
