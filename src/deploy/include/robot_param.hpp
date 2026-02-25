@@ -103,8 +103,8 @@ public:
         {"last_action", dof_nums}};
 
     std::map<std::string, int> action_group = {
-        {"joint_pos", 12},
-        {"joint_vel", 4}};
+        {"action_pos", 12},
+        {"action_vel", 4}};
 
     const int obs_dim = observation_group["angular_vel"] +
                         observation_group["gravity_projection"] +

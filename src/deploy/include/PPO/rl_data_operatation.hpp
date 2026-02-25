@@ -42,8 +42,8 @@ public:
         data.obs.angular_vel.resize(param.observation_group["angular_vel"], 0.0);
         data.obs.gravity_projection.resize(param.observation_group["gravity_projection"], 0.0);
         data.obs.command.resize(param.observation_group["command"], 0.0);
-        data.obs.joint_pos.resize(param.observation_group["joint_pos"], 0.0);
-        data.obs.joint_vel.resize(param.observation_group["joint_vel"], 0.0);
+        data.obs.joint_pos.resize(param.observation_group["action_pos"], 0.0);
+        data.obs.joint_vel.resize(param.observation_group["action_vel"], 0.0);
         data.obs.last_action.resize(param.observation_group["last_action"], 0.0);
 
         data.act.action_pos.resize(param.action_group["action_pos"], 0.0);
@@ -78,7 +78,7 @@ std::vector<float> RLDataOperation::set_obs()
     for (int i = 0; i < param.observation_group["command"]; ++i)
         integrated_obs.push_back(data.obs.command[i]);
 
-    for (int i = 0; i < param.observation_group["joint_pos"]-4; ++i)//；轮子的位置全部设置为0
+    for (int i = 0; i < param.observation_group["action_pos"]-4; ++i)//；轮子的位置全部设置为0
         integrated_obs.push_back((data.obs.joint_pos[i] - param.dof_pos_robot[i]) * param._dof_pos_scale);
 
     for (int i = 0; i < 4; ++i)
