@@ -20,7 +20,7 @@ private:
         FSM_State *Passive = nullptr;
         FSM_State *StandUp = nullptr;
         FSM_State *Getdown = nullptr;
-        // FSM_State *RL_Control = nullptr;
+        FSM_State *RL_Control = nullptr;
     } FSM_List;
 
     FSM_State *current_state_ = nullptr;
@@ -44,7 +44,8 @@ FSM_Manager::FSM_Manager(const std::string &sim_engine, const std::string &model
     FSM_List.Passive = new FSM_Passive("Passive", Data.hardware);
     FSM_List.StandUp = new FSM_Getup("StandUp", Data.hardware, &Data.Previous_state);
     FSM_List.Getdown = new FSM_Getdown("Getdown", Data.hardware);
-    // FSM_List.RL_Control = new FSM_Rl_control("RL_Control", Data.hardware, _model_type, &Data.command);
+    FSM_List.RL_Control = new FSM_Rl_control("RL_Control", Data.hardware, _model_type, &Data.command);
+
     current_state_ = FSM_List.Disable;
 
     current_state_->enter();
@@ -56,7 +57,7 @@ FSM_Manager::~FSM_Manager()
     delete FSM_List.Passive;
     delete FSM_List.StandUp;
     delete FSM_List.Getdown;
-    // delete FSM_List.RL_Control;
+    delete FSM_List.RL_Control;
 }
 
 FSM_State *FSM_Manager::state_change(RobotState_List &next_state)
@@ -69,8 +70,8 @@ FSM_State *FSM_Manager::state_change(RobotState_List &next_state)
         return FSM_List.StandUp;
     else if (next_state == RobotState_List::Getdown)
         return FSM_List.Getdown;
-    // else if (next_state == RobotState_List::RL_Control)
-    //     return FSM_List.RL_Control;
+    else if (next_state == RobotState_List::RL_Control)
+        return FSM_List.RL_Control;
     else
         return nullptr;
 }

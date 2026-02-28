@@ -74,8 +74,8 @@ public:
 class FSM_Getup : public FSM_State
 {
 private:
-    const int pre_during = getCycleCount(2.0, param.control_rate);
-    const int stand_during = getCycleCount(2.0, param.control_rate);
+    const int pre_during = getCycleCount(1.2, param.control_rate);
+    const int stand_during = getCycleCount(1.2, param.control_rate);
 
     int count = 0;
     int stage = 0;
@@ -152,8 +152,8 @@ public:
 class FSM_Getdown : public FSM_State
 {
 private:
-    const int pre_during = getCycleCount(2.0, param.control_rate);
-    const int getdown_during = getCycleCount(2.0, param.control_rate);
+    const int pre_during = getCycleCount(1.2, param.control_rate);
+    const int getdown_during = getCycleCount(1.2, param.control_rate);
 
     int count = 0;
     int stage = 0;
@@ -240,18 +240,25 @@ public:
           _model_path(POLICY_MODEL_PATH + param.robot_name),
           _command(command)
     {
-        // 初始化强化学习模型
-        if (_model_type == "onnx")
-            model_operation = new InterfaceOnnx(_model_path + "/policy.onnx");
-        else if (_model_type == "torchscript")
-            model_operation = new InterfaceTorchscript(_model_path + "/policy.pt");
-        else
-            std::cout << "Error: Unsupported model type!" << std::endl;
+        // 初始化强化学习模型（使用RAII模式）
+        try {
+            if (_model_type == "onnx")
+                model_operation = new InterfaceOnnx(_model_path + "/policy.onnx");
+            else if (_model_type == "torch")
+                model_operation = new InterfaceTorchscript(_model_path + "/policy.pt");
+            else
+                std::cout << "Error: Unsupported model type!" << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "ERROR: Failed to initialize RL model: " << e.what() << std::endl;
+            model_operation = nullptr;
+        }
 
         obs_collection.start(1.0 / (param.dt),
                              std::bind(&RLDataOperation::observation_set, model_operation,
                                        std::ref(_interface->angle_vel), std::ref(_interface->gravity_projection), std::cref(*_command), std::ref(_interface->pos), std::ref(_interface->vel)),
                              "Obs_Collection_Timer");
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         data_forward.start(1.0 / (param.dt * param.decimation), std::bind(&RLDataOperation::push_forward, model_operation), "Data_Forward_Timer");
 
@@ -270,17 +277,10 @@ public:
         for (int i = 0; i < param.action_group["action_pos"]; i++)
             _cmd[0][i] = raw_action[i];
         for (int i = 0; i < param.action_group["action_vel"]; i++)
-            _cmd[1][i+param.action_group["action_pos"]] = raw_action[i + param.action_group["action_pos"]];
-        
+            _cmd[1][i + param.action_group["action_pos"]] = raw_action[i + param.action_group["action_pos"]];
+
         _interface->command_set(_cmd[0], _cmd[1], _cmd[2], _cmd[3], _cmd[4]);
 
-        if (print_count % 100 == 0)
-        {
-            std::cout << "\r\033[K" << "x_vel:" << _command[0] << "\t y_vel:" << _command[1] << "\t yaw_vel:" << _command[2] << std::flush;
-            print_count = 0;
-        }
-        else
-            print_count++;
     }
     void exit() override
     {
@@ -289,7 +289,13 @@ public:
 
     ~FSM_Rl_control()
     {
-        delete model_operation;
-        model_operation = nullptr;
+        obs_collection.stop();
+        data_forward.stop();
+        
+        // 安全释放内存
+        if (model_operation) {
+            delete model_operation;
+            model_operation = nullptr;
+        }
     }
 };

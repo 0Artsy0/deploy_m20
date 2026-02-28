@@ -26,10 +26,10 @@ public:
 int main(int argc, char *argv[])
 {
     setlocale(LC_ALL, "");
-    ros::init(argc, argv, "go2_deploy");
+    ros::init(argc, argv, "m20_deploy");
 
     std::string sim_engine="gazebo";
-    std::string model_type="torchscript";
+    std::string model_type="torch";
 
     if (argc>3){
         ROS_ERROR("too much params");
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
             if (param=="gazebo"||param=="mujoco"){
                 sim_engine = param;
             }
-            if (param=="torchscript"||param=="onnx"){
+            if (param=="torch"||param=="onnx"){
                 model_type = param;
             }
         } 

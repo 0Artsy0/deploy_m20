@@ -44,6 +44,7 @@ InterfaceTorchscript::~InterfaceTorchscript() noexcept
 
 void InterfaceTorchscript::push_forward() // 策略网络前向推理
 {
+
     try
     {
         // Convert observation vector to Torch tensor
@@ -71,7 +72,7 @@ void InterfaceTorchscript::push_forward() // 策略网络前向推理
         }
 
         // Get data pointer and size
-        float* data_ptr = cpu_tensor.data_ptr<float>();
+        float *data_ptr = cpu_tensor.data_ptr<float>();
         int64_t num_elements = cpu_tensor.numel();
 
         // Copy data to vector
@@ -79,7 +80,6 @@ void InterfaceTorchscript::push_forward() // 策略网络前向推理
 
         set_act(act); // 动作的缩放映射
         // Store action in data
-
         data.obs.last_action = act;
     }
     catch (const std::exception &e) // 捕获Torch推理过程中可能抛出的异常

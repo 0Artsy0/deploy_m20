@@ -252,7 +252,7 @@ void JoyInterface::ReadAndProcessEvents() {
             switch (raw_event_.number) {
                 // 左摇杆X轴（0：左=-1，右=1）
                 case 0:
-                    current_state_.LS[0] = std::round(ApplyDeadzone(raw_event_.value) * 100) / 100.0;
+                    current_state_.LS[0] = std::round(-ApplyDeadzone(raw_event_.value) * 100) / 100.0;
                     break;
                 // 左摇杆Y轴（1：上=1，下=-1，原始值上为负，取反）
                 case 1:

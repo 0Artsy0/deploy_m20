@@ -10,7 +10,7 @@ class robot_control_param
 public:
     const std::string robot_name = "m20"; // 机器人名称
     const int hardware_rate = 500;        // 硬件循环频率
-    const int control_rate = 500;         // 控制循环频率
+    const int control_rate = 250;         // 控制循环频率
 
     /*====================================================base_parameters============================================================= */
     const float Safety_Factor = 0.9; // 安全系数因子
@@ -113,5 +113,5 @@ public:
                         observation_group["joint_vel"] +
                         observation_group["last_action"];
                         
-    const int act_dim = action_group["joint_pos"] + action_group["joint_vel"];
+    const int act_dim = action_group["action_pos"] + action_group["action_vel"];
 };

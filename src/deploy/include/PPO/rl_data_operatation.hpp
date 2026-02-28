@@ -78,7 +78,7 @@ std::vector<float> RLDataOperation::set_obs()
     for (int i = 0; i < param.observation_group["command"]; ++i)
         integrated_obs.push_back(data.obs.command[i]);
 
-    for (int i = 0; i < param.observation_group["action_pos"]-4; ++i)//；轮子的位置全部设置为0
+    for (int i = 0; i < param.observation_group["joint_pos"] - 4; ++i) // ；轮子的位置全部设置为0
         integrated_obs.push_back((data.obs.joint_pos[i] - param.dof_pos_robot[i]) * param._dof_pos_scale);
 
     for (int i = 0; i < 4; ++i)
@@ -111,10 +111,10 @@ std::vector<float> RLDataOperation::get_act()
 {
     std::vector<float> act_cliped;
 
-    for (auto &vel : data.act.action_vel)
-        act_cliped.push_back(vel);
     for (auto &pos : data.act.action_pos)
         act_cliped.push_back(pos);
+    for (auto &vel : data.act.action_vel)
+        act_cliped.push_back(vel);
 
     data_clip(act_cliped, 2);
 
